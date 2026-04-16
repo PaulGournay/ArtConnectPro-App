@@ -1,3 +1,4 @@
+USE artconnect_db;
 
 CREATE INDEX idx_artist_name ON Artist(name);
 
