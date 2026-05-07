@@ -26,7 +26,9 @@ com\project\artconnect\model\ArtworkTag.class
 com\project\artconnect\service\impl\InMemoryWorkshopService.class
 com\project\artconnect\service\GalleryService.class
 com\project\artconnect\dao\CommunityMemberDao.class
+com\project\artconnect\service\impl\JdbcArtistService.class
 com\project\artconnect\MainApp.class
+com\project\artconnect\service\impl\JdbcArtworkService.class
 com\project\artconnect\model\Artist.class
 com\project\artconnect\service\CommunityService.class
 com\project\artconnect\ui\GalleryController$1.class

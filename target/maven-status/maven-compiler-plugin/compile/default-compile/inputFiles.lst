@@ -10,6 +10,7 @@ C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\ar
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\service\CommunityService.java
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\dao\GalleryDao.java
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\persistence\JdbcArtistDao.java
+C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\service\impl\JdbcArtistService.java
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\ui\DiscoverController.java
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\model\Gallery.java
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\service\impl\InMemoryCommunityService.java
@@ -27,6 +28,7 @@ C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\ar
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\model\CommunityMember.java
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\ui\ArtistController.java
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\service\impl\InMemoryArtworkService.java
+C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\TestDB.java
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\model\Review.java
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\service\ArtistService.java
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\dao\ExhibitionDao.java
@@ -36,5 +38,6 @@ C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\ar
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\service\impl\InMemoryWorkshopService.java
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\persistence\JdbcArtworkDao.java
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\model\Discipline.java
+C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\service\impl\JdbcArtworkService.java
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\model\Exhibition.java
 C:\Users\alex2\OneDrive\Documents\ArtConnectPro-App\src\main\java\com\project\artconnect\model\Artist.java
