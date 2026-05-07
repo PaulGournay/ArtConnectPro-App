@@ -1,44 +1,44 @@
 USE ArtGalleryDB;
 
 -- =========================================================================
--- 3. TRANSACTIONS (Scénario complexe atomique)
+-- 3. TRANSACTIONS (Atomic complex scenario)
 -- =========================================================================
 
 DROP PROCEDURE IF EXISTS book_multiple_workshops_transaction;
 
 DELIMITER //
 
--- Procédure Transactionnelle : Réserver plusieurs ateliers en même temps pour un membre
--- Atomicité : Soit le membre est inscrit à TOUS les ateliers, soit la transaction est annulée (ROLLBACK).
+-- Transactional Procedure: Book multiple workshops at the same time for a member
+-- Atomicity: Either the member is registered for ALL workshops, or the transaction is canceled (ROLLBACK).
 CREATE PROCEDURE book_multiple_workshops_transaction(
     IN p_user_id INT,
     IN p_workshop_id_1 INT,
     IN p_workshop_id_2 INT
 )
 BEGIN
-    -- Déclaration d'un gestionnaire d'erreurs (Si une erreur survient, ex: trigger capacité pleine)
+    -- Declaration of an error handler (If an error occurs, e.g., full capacity trigger)
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        -- On annule tout ce qui a été fait dans la transaction
+        -- Rollback everything done in the transaction
         ROLLBACK;
         SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Transaction annulée : Impossible de valider toutes les réservations (vérifiez les capacités des ateliers).';
+        SET MESSAGE_TEXT = 'Transaction canceled: Cannot validate all bookings (check workshop capacities).';
     END;
 
-    -- Début de la transaction
+    -- Start of transaction
     START TRANSACTION;
 
-    -- Première réservation
+    -- First booking
     INSERT INTO Booking (booking_date, payment_status, workshop_id, user_id)
     VALUES (NOW(), 'Pending', p_workshop_id_1, p_user_id);
 
-    -- Deuxième réservation
-    -- Si ce workshop est plein, le trigger "check_workshop_capacity" va lancer une exception.
-    -- L'exception sera captée par le EXIT HANDLER ci-dessus, et la première réservation sera annulée.
+    -- Second booking
+    -- If this workshop is full, the "check_workshop_capacity" trigger will throw an exception.
+    -- The exception will be caught by the EXIT HANDLER above, and the first booking will be rolled back.
     INSERT INTO Booking (booking_date, payment_status, workshop_id, user_id)
     VALUES (NOW(), 'Pending', p_workshop_id_2, p_user_id);
 
-    -- Si tout s'est bien passé, on valide les changements définitivement
+    -- If everything went well, permanently commit the changes
     COMMIT;
     
 END //

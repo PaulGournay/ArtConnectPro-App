@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS ArtGalleryDB;
 USE ArtGalleryDB;
 
--- 1. Tables indépendantes (sans clés étrangères au début)
+-- 1. Independent tables (without foreign keys initially)
 CREATE TABLE Gallery (
     gallery_id SMALLINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE CommunityMember (
     birth_year SMALLINT
 );
 
--- 2. Tables avec clés étrangères simples (1,n)
+-- 2. Tables with simple foreign keys (1,N)
 CREATE TABLE Exhibition (
     exhibition_id SMALLINT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(50) NOT NULL,
@@ -86,7 +86,7 @@ CREATE TABLE Workshop (
     FOREIGN KEY (artist_id) REFERENCES Artist(artist_id)
 );
 
--- 3. Tables dépendantes de plusieurs entités
+-- 3. Tables dependent on multiple entities
 CREATE TABLE Booking (
     booking_id INT PRIMARY KEY AUTO_INCREMENT,
     booking_date DATETIME,
@@ -99,7 +99,7 @@ CREATE TABLE Booking (
 
 CREATE TABLE Review (
     review_id INT PRIMARY KEY AUTO_INCREMENT,
-    rating TINYINT, -- Correspond au type 'BYTE' du schéma
+    rating TINYINT, -- Corresponds to the 'BYTE' type in the schema
     comment VARCHAR(50),
     review_date DATE,
     user_id INT NOT NULL,
@@ -108,8 +108,8 @@ CREATE TABLE Review (
     FOREIGN KEY (artwork_id) REFERENCES Artwork(artwork_id)
 );
 
--- 4. Tables de jointure pour les relations (n,n)
--- Relation "features" entre Exhibition et Artwork
+-- 4. Join tables for (N,M) relationships
+-- "features" relationship between Exhibition and Artwork
 CREATE TABLE features (
     exhibition_id SMALLINT,
     artwork_id INT,
@@ -119,7 +119,7 @@ CREATE TABLE features (
     FOREIGN KEY (artwork_id) REFERENCES Artwork(artwork_id)
 );
 
--- Relation "tagged" entre Artwork et Tag
+-- "tagged" relationship between Artwork and Tag
 CREATE TABLE tagged (
     artwork_id INT,
     tag_id INT,
@@ -128,7 +128,7 @@ CREATE TABLE tagged (
     FOREIGN KEY (tag_id) REFERENCES Tag(tag_id)
 );
 
--- Relation "practices" entre Artist et Discipline
+-- "practices" relationship between Artist and Discipline
 CREATE TABLE practices (
     artist_id INT,
     discipline_id INT,
@@ -137,7 +137,7 @@ CREATE TABLE practices (
     FOREIGN KEY (discipline_id) REFERENCES Discipline(discipline_id)
 );
 
--- Relation "Favors" entre CommunityMember et Discipline
+-- "Favors" relationship between CommunityMember and Discipline
 CREATE TABLE Favors (
     user_id INT,
     discipline_id INT,

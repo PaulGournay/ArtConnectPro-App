@@ -1,12 +1,12 @@
 -- ==========================================================
--- SCRIPT DE CRÉATION ET DE REMPLISSAGE DE LA BASE DE DONNÉES
+-- SCRIPT FOR CREATING AND POPULATING THE DATABASE
 -- ==========================================================
 
 DROP DATABASE IF EXISTS ArtGalleryDB;
 CREATE DATABASE ArtGalleryDB;
 USE ArtGalleryDB;
 
--- 1. CRÉATION DES TABLES INDÉPENDANTES
+-- 1. CREATION OF INDEPENDENT TABLES
 -- ----------------------------------------------------------
 
 CREATE TABLE Gallery (
@@ -52,7 +52,7 @@ CREATE TABLE CommunityMember (
     birth_year SMALLINT
 ) ENGINE=InnoDB;
 
--- 2. CRÉATION DES TABLES AVEC RELATIONS (1,N)
+-- 2. CREATION OF TABLES WITH (1,N) RELATIONSHIPS
 -- ----------------------------------------------------------
 
 CREATE TABLE Exhibition (
@@ -95,7 +95,7 @@ CREATE TABLE Workshop (
     FOREIGN KEY (artist_id) REFERENCES Artist(artist_id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- 3. CRÉATION DES TABLES DÉPENDANTES (BOOKING & REVIEW)
+-- 3. CREATION OF DEPENDENT TABLES (BOOKING & REVIEW)
 -- ----------------------------------------------------------
 
 CREATE TABLE Booking (
@@ -119,7 +119,7 @@ CREATE TABLE Review (
     FOREIGN KEY (artwork_id) REFERENCES Artwork(artwork_id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- 4. CRÉATION DES TABLES DE JOINTURE (N,N)
+-- 4. CREATION OF JOIN TABLES (N,N)
 -- ----------------------------------------------------------
 
 CREATE TABLE features (
@@ -157,7 +157,7 @@ CREATE TABLE Favors (
 
 
 -- ==========================================================
--- INSERTION DES DONNÉES (PEUPLEMENT)
+-- DATA INSERTION (POPULATION)
 -- ==========================================================
 
 -- Gallery
@@ -220,17 +220,18 @@ INSERT INTO features (exhibition_id, artwork_id, arrival_date) VALUES
 
 -- Many-to-Many: tagged (Artwork <-> Tag)
 INSERT INTO tagged (artwork_id, tag_id) VALUES
-(1, 1), (1, 4), -- Rêve Azur: Abstrait, Couleur
-(2, 3), (2, 5), -- Sphère de Vie: Sculpture, Minimaliste
-(3, 2), (3, 4); -- Nuit Urbaine: Moderne, Couleur
+(1, 1), (1, 4), -- Rêve Azur: Abstract, Color
+(2, 3), (2, 5), -- Sphère de Vie: Sculpture, Minimalist
+(3, 2), (3, 4); -- Nuit Urbaine: Modern, Color
 
 -- Many-to-Many: practices (Artist <-> Discipline)
 INSERT INTO practices (artist_id, discipline_id) VALUES
-(1, 1), (1, 2), -- Marc Chagall Jr: Peinture, Sculpture
-(2, 3), (2, 4); -- Sonia Delaunay: Photographie, Art Digital
+(1, 1), (1, 2), -- Marc Chagall Jr: Painting, Sculpture
+(2, 3), (2, 4); -- Sonia Delaunay: Photography, Digital Art
 
 -- Many-to-Many: Favors (CommunityMember <-> Discipline)
 INSERT INTO Favors (user_id, discipline_id) VALUES
-(1, 1), (1, 4), -- Thomas aime la peinture et le digital
-(2, 3),         -- Julie aime la photo
+(1, 1), (1, 4), -- Thomas likes painting and digital art
+(2, 3),         -- Julie likes photography
 (3, 2);         
+}
