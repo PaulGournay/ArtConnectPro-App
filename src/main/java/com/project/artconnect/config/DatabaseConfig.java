@@ -6,6 +6,6 @@ package com.project.artconnect.config;
  */
 public class DatabaseConfig {
     public static final String URL = "jdbc:mysql://localhost:3306/ArtGalleryDB";
-    public static final String USER = "root";
-    public static final String PASSWORD = ""; // CHANGE ME
+    public static final String USER = "artconnect_user";
+    public static final String PASSWORD = "ArtSecure_2026!";
 }

@@ -33,6 +33,7 @@ public class ServiceProvider {
     private static final GalleryService galleryService = new JdbcGalleryService(jdbcGalleryDao, jdbcExhibitionDao);
     private static final WorkshopService workshopService = new JdbcWorkshopService(jdbcWorkshopDao);
     private static final CommunityService communityService = new JdbcCommunityService(jdbcMemberDao);
+    private static final ExhibitionService exhibitionService = new JdbcExhibitionService(jdbcExhibitionDao);
 
     // ---------------------------------------------------------
     // 3. Initialization Block
@@ -65,5 +66,9 @@ public class ServiceProvider {
 
     public static CommunityService getCommunityService() {
         return communityService;
+    }
+
+    public static ExhibitionService getExhibitionService() {
+        return exhibitionService;
     }
 }
