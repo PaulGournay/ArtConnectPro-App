@@ -3,7 +3,6 @@ package com.project.artconnect.service.impl;
 import com.project.artconnect.dao.ArtworkDao;
 import com.project.artconnect.model.Artist;
 import com.project.artconnect.model.Artwork;
-import com.project.artconnect.persistence.JdbcArtworkDao;
 import com.project.artconnect.service.ArtworkService;
 
 import java.util.List;
@@ -12,8 +11,8 @@ import java.util.Optional;
 public class JdbcArtworkService implements ArtworkService {
     private final ArtworkDao artworkDao;
 
-    public JdbcArtworkService() {
-        this.artworkDao = new JdbcArtworkDao();
+    public JdbcArtworkService(ArtworkDao artworkDao) {
+        this.artworkDao = artworkDao;
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.project.artconnect.service.impl;
 import com.project.artconnect.dao.ArtistDao;
 import com.project.artconnect.model.Artist;
 import com.project.artconnect.model.Discipline;
-import com.project.artconnect.persistence.JdbcArtistDao;
 import com.project.artconnect.service.ArtistService;
 import com.project.artconnect.util.ConnectionManager;
 
@@ -19,8 +18,8 @@ import java.util.stream.Collectors;
 public class JdbcArtistService implements ArtistService {
     private final ArtistDao artistDao;
 
-    public JdbcArtistService() {
-        this.artistDao = new JdbcArtistDao();
+    public JdbcArtistService(ArtistDao artistDao) {
+        this.artistDao = artistDao;
     }
 
     @Override
@@ -53,8 +52,8 @@ public class JdbcArtistService implements ArtistService {
         List<Discipline> disciplines = new ArrayList<>();
         String sql = "SELECT * FROM Discipline";
         try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 disciplines.add(new Discipline(rs.getString("name")));
             }
@@ -68,7 +67,8 @@ public class JdbcArtistService implements ArtistService {
     public List<Artist> searchArtists(String query, String disciplineName, String city) {
         return artistDao.findAll().stream()
                 .filter(a -> query == null || a.getName().toLowerCase().contains(query.toLowerCase()))
-                .filter(a -> city == null || city.isEmpty() || (a.getCity() != null && a.getCity().equalsIgnoreCase(city)))
+                .filter(a -> city == null || city.isEmpty()
+                        || (a.getCity() != null && a.getCity().equalsIgnoreCase(city)))
                 .collect(Collectors.toList());
     }
 }
