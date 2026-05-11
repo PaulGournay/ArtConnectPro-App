@@ -38,5 +38,3 @@ GRANT SELECT ON ArtGalleryDB.view_active_exhibitions_now TO 'artconnect_user'@'l
 -- Limit execution to ArtGalleryDB database procedures only
 GRANT EXECUTE ON ArtGalleryDB.* TO 'artconnect_user'@'localhost';
 
--- 6. Apply changes
-FLUSH PRIVILEGES;
