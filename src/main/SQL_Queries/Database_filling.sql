@@ -234,4 +234,3 @@ INSERT INTO Favors (user_id, discipline_id) VALUES
 (1, 1), (1, 4), -- Thomas likes painting and digital art
 (2, 3),         -- Julie likes photography
 (3, 2);         
-}

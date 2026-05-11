@@ -22,4 +22,9 @@
             <TableColumn fx:id="yearColumn" text="Birth Year" prefWidth="100" />
         </columns>
     </TableView>
+    <HBox spacing="10.0" alignment="CENTER_LEFT">
+        <Button text="Add Artist" onAction="#handleAdd" />
+        <Button text="Modify Artist" onAction="#handleModify" />
+        <Button text="Delete Artist" onAction="#handleDelete" />
+    </HBox>
 </VBox>
