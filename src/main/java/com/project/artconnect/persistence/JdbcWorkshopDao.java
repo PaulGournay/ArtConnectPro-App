@@ -51,6 +51,82 @@ public class JdbcWorkshopDao implements WorkshopDao {
         return workshops;
     }
 
+    @Override
+    public void save(Workshop workshop) {
+        String call = "{CALL create_workshop_with_artist(?, ?, ?, ?, ?, ?)}";
+        try (Connection conn = ConnectionManager.getConnection();
+             CallableStatement cs = conn.prepareCall(call)) {
+            cs.setString(1, workshop.getInstructor().getName());
+            cs.setString(2, workshop.getInstructor().getContactEmail());
+            cs.setString(3, workshop.getTitle());
+            cs.setDate(4, workshop.getDate() != null ? Date.valueOf(workshop.getDate().toLocalDate()) : null);
+            cs.setInt(5, workshop.getMaxParticipants());
+            cs.setBigDecimal(6, java.math.BigDecimal.valueOf(workshop.getPrice()));
+            cs.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        String update = "UPDATE Workshop SET duration_minutes = ?, location = ?, description = ?, level = ? WHERE title = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(update)) {
+            stmt.setInt(1, workshop.getDurationMinutes());
+            stmt.setString(2, workshop.getLocation());
+            stmt.setString(3, workshop.getDescription());
+            stmt.setString(4, workshop.getLevel());
+            stmt.setString(5, workshop.getTitle());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void update(Workshop workshop) {
+        String sql = "UPDATE Workshop SET date = ?, duration_minutes = ?, max_participants = ?, price = ?, artist_id = ?, location = ?, description = ?, level = ? WHERE title = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setDate(1, workshop.getDate() != null ? Date.valueOf(workshop.getDate().toLocalDate()) : null);
+            stmt.setInt(2, workshop.getDurationMinutes());
+            stmt.setInt(3, workshop.getMaxParticipants());
+            stmt.setDouble(4, workshop.getPrice());
+            stmt.setInt(5, getArtistIdByName(conn, workshop.getInstructor().getName()));
+            stmt.setString(6, workshop.getLocation());
+            stmt.setString(7, workshop.getDescription());
+            stmt.setString(8, workshop.getLevel());
+            stmt.setString(9, workshop.getTitle());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void delete(String title) {
+        String sql = "DELETE FROM Workshop WHERE title = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, title);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int getArtistIdByName(Connection conn, String name) throws SQLException {
+        String sql = "SELECT artist_id FROM Artist WHERE name = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("artist_id");
+                }
+            }
+        }
+        throw new SQLException("Artist not found: " + name);
+    }
+
     private Workshop mapResultSetToWorkshop(ResultSet rs) throws SQLException {
         Workshop workshop = new Workshop();
         workshop.setTitle(rs.getString("title"));

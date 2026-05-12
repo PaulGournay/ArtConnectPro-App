@@ -2,6 +2,7 @@ package com.project.artconnect.service.impl;
 
 import com.project.artconnect.dao.ExhibitionDao;
 import com.project.artconnect.dao.GalleryDao;
+import com.project.artconnect.model.Artist;
 import com.project.artconnect.model.Exhibition;
 import com.project.artconnect.model.Gallery;
 import com.project.artconnect.service.GalleryService;
@@ -49,4 +50,20 @@ public class JdbcGalleryService implements GalleryService {
                 .filter(e -> e.getGallery() != null && e.getGallery().getName().equals(gallery.getName()))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void createGallery(Gallery gallery) {
+        galleryDao.save(gallery);
+    }
+
+    @Override
+    public void updateGallery(Gallery gallery) {
+        galleryDao.update(gallery);
+    }
+
+    @Override
+    public void deleteGallery(String name) {
+        galleryDao.delete(name);
+    }
+
 }

@@ -17,4 +17,9 @@
             <TableColumn fx:id="levelColumn" text="Level" prefWidth="100" />
         </columns>
     </TableView>
+    <HBox spacing="10.0" alignment="CENTER_LEFT">
+        <Button text="Add Workshop" onAction="#handleAdd" />
+        <Button text="Edit Workshop" onAction="#handleEdit" />
+        <Button text="Delete Workshop" onAction="#handleDelete" />
+    </HBox>
 </VBox>

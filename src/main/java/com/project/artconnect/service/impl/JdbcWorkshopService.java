@@ -3,6 +3,7 @@ package com.project.artconnect.service.impl;
 import com.project.artconnect.dao.WorkshopDao;
 import com.project.artconnect.model.Booking;
 import com.project.artconnect.model.CommunityMember;
+import com.project.artconnect.model.Gallery;
 import com.project.artconnect.model.Workshop;
 import com.project.artconnect.service.WorkshopService;
 
@@ -40,5 +41,20 @@ public class JdbcWorkshopService implements WorkshopService {
     public List<Booking> getBookingsByMember(CommunityMember member) {
         // Return an empty list for now until a BookingDao is implemented
         return Collections.emptyList();
+    }
+
+        @Override
+    public void createWorkshop(Workshop workshop) {
+        workshopDao.save(workshop);
+    }
+
+    @Override
+    public void updateWorkshop(Workshop workshop) {
+        workshopDao.update(workshop);
+    }
+
+    @Override
+    public void deleteWorkshop(String name) {
+        workshopDao.delete(name);
     }
 }

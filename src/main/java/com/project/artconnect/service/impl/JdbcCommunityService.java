@@ -1,6 +1,7 @@
 package com.project.artconnect.service.impl;
 
 import com.project.artconnect.dao.CommunityMemberDao;
+import com.project.artconnect.model.Artist;
 import com.project.artconnect.model.CommunityMember;
 import com.project.artconnect.model.Review;
 import com.project.artconnect.service.CommunityService;
@@ -34,5 +35,20 @@ public class JdbcCommunityService implements CommunityService {
     public List<Review> getReviewsByMember(CommunityMember member) {
         // Return an empty list for now until a ReviewDao is implemented
         return Collections.emptyList();
+    }
+
+        @Override
+    public void createMember(CommunityMember member) {
+        memberDao.save(member);
+    }
+
+    @Override
+    public void updateMember(CommunityMember member) {
+        memberDao.update(member);
+    }
+
+    @Override
+    public void deleteMember(String name) {
+        memberDao.delete(name);
     }
 }

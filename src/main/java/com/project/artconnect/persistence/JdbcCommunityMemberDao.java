@@ -47,6 +47,60 @@ public class JdbcCommunityMemberDao implements CommunityMemberDao {
         return members;
     }
 
+    @Override
+    public void save(CommunityMember member) {
+        String sql = "INSERT INTO CommunityMember (name, email, phone, city, membership_type, birth_year) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, member.getName());
+            stmt.setString(2, member.getEmail());
+            stmt.setString(3, member.getPhone());
+            stmt.setString(4, member.getCity());
+            stmt.setString(5, member.getMembershipType());
+            if (member.getBirthYear() != null) {
+                stmt.setInt(6, member.getBirthYear());
+            } else {
+                stmt.setNull(6, java.sql.Types.SMALLINT);
+            }
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void update(CommunityMember member) {
+        String sql = "UPDATE CommunityMember SET email = ?, phone = ?, city = ?, membership_type = ?, birth_year = ? WHERE name = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, member.getEmail());
+            stmt.setString(2, member.getPhone());
+            stmt.setString(3, member.getCity());
+            stmt.setString(4, member.getMembershipType());
+            if (member.getBirthYear() != null) {
+                stmt.setInt(5, member.getBirthYear());
+            } else {
+                stmt.setNull(5, java.sql.Types.SMALLINT);
+            }
+            stmt.setString(6, member.getName());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void delete(String name) {
+        String sql = "DELETE FROM CommunityMember WHERE name = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private CommunityMember mapResultSetToMember(ResultSet rs) throws SQLException {
         CommunityMember member = new CommunityMember();
         member.setName(rs.getString("name"));
