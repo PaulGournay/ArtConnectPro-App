@@ -20,10 +20,10 @@ public class JdbcArtworkDao implements ArtworkDao {
     @Override
     public List<Artwork> findAll() {
         List<Artwork> artworks = new ArrayList<>();
-        String sql = "SELECT a.*, art.name AS artist_name FROM Artwork a JOIN Artist art ON a.artist_id = art.artist_id";
+        String sql = "SELECT * FROM view_artwork_catalog_with_artist";
         try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 artworks.add(mapResultSetToArtwork(rs));
             }
@@ -35,9 +35,9 @@ public class JdbcArtworkDao implements ArtworkDao {
 
     @Override
     public java.util.Optional<Artwork> findByTitle(String title) {
-        String sql = "SELECT a.*, art.name AS artist_name FROM Artwork a JOIN Artist art ON a.artist_id = art.artist_id WHERE a.title = ?";
+        String sql = "SELECT * FROM view_artwork_catalog_with_artist WHERE title = ?";
         try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, title);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -106,7 +106,7 @@ public class JdbcArtworkDao implements ArtworkDao {
     public void delete(String title) {
         String sql = "DELETE FROM Artwork WHERE title = ?";
         try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, title);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -117,9 +117,9 @@ public class JdbcArtworkDao implements ArtworkDao {
     @Override
     public List<Artwork> findByArtistName(String artistName) {
         List<Artwork> artworks = new ArrayList<>();
-        String sql = "SELECT a.*, art.name AS artist_name FROM Artwork a JOIN Artist art ON a.artist_id = art.artist_id WHERE art.name = ?";
+        String sql = "SELECT * FROM view_artwork_catalog_with_artist WHERE artist_name = ?";
         try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, artistName);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -153,7 +153,7 @@ public class JdbcArtworkDao implements ArtworkDao {
         artwork.setMedium(rs.getString("medium"));
         artwork.setDimensions(rs.getString("dimensions"));
         artwork.setDescription(rs.getString("description"));
-        
+
         String statusStr = rs.getString("status");
         if (statusStr != null) {
             try {
@@ -162,18 +162,18 @@ public class JdbcArtworkDao implements ArtworkDao {
                 // Ignore invalid status
             }
         }
-        
+
         int creationYear = rs.getInt("creation_year");
         if (!rs.wasNull()) {
             artwork.setCreationYear(creationYear);
         }
-        
+
         artwork.setPrice(rs.getDouble("price"));
-        
+
         Artist artist = new Artist();
         artist.setName(rs.getString("artist_name"));
         artwork.setArtist(artist);
-        
+
         return artwork;
     }
 }

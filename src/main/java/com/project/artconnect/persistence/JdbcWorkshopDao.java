@@ -14,9 +14,7 @@ public class JdbcWorkshopDao implements WorkshopDao {
 
     @Override
     public Optional<Workshop> findById(Long id) {
-        String sql = "SELECT w.*, a.name AS artist_name " +
-                "FROM Workshop w JOIN Artist a ON w.artist_id = a.artist_id " +
-                "WHERE w.workshop_id = ?";
+        String sql = "SELECT * FROM view_workshop_details WHERE workshop_id = ?";
         try (Connection conn = ConnectionManager.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -35,8 +33,7 @@ public class JdbcWorkshopDao implements WorkshopDao {
     @Override
     public List<Workshop> findAll() {
         List<Workshop> workshops = new ArrayList<>();
-        String sql = "SELECT w.*, a.name AS artist_name " +
-                "FROM Workshop w JOIN Artist a ON w.artist_id = a.artist_id";
+        String sql = "SELECT * FROM view_workshop_details";
 
         try (Connection conn = ConnectionManager.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
@@ -55,7 +52,7 @@ public class JdbcWorkshopDao implements WorkshopDao {
     public int getParticipantsCount(long workshopId) {
         String sql = "SELECT get_workshop_participants_count(?)";
         try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, workshopId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -73,7 +70,7 @@ public class JdbcWorkshopDao implements WorkshopDao {
         String sql = "INSERT INTO Booking (booking_date, payment_status, workshop_id, user_id) " +
                 "VALUES (NOW(), 'Pending', ?, ?)";
         try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, workshopId);
             stmt.setLong(2, memberId);
             stmt.executeUpdate();
@@ -87,7 +84,7 @@ public class JdbcWorkshopDao implements WorkshopDao {
     public void save(Workshop workshop) {
         String call = "{CALL create_workshop_with_artist(?, ?, ?, ?, ?, ?)}";
         try (Connection conn = ConnectionManager.getConnection();
-             CallableStatement cs = conn.prepareCall(call)) {
+                CallableStatement cs = conn.prepareCall(call)) {
             cs.setString(1, workshop.getInstructor().getName());
             cs.setString(2, workshop.getInstructor().getContactEmail());
             cs.setString(3, workshop.getTitle());
@@ -102,7 +99,7 @@ public class JdbcWorkshopDao implements WorkshopDao {
 
         String update = "UPDATE Workshop SET duration_minutes = ?, location = ?, description = ?, level = ? WHERE title = ?";
         try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(update)) {
+                PreparedStatement stmt = conn.prepareStatement(update)) {
             stmt.setInt(1, workshop.getDurationMinutes());
             stmt.setString(2, workshop.getLocation());
             stmt.setString(3, workshop.getDescription());
@@ -118,7 +115,7 @@ public class JdbcWorkshopDao implements WorkshopDao {
     public void update(Workshop workshop) {
         String sql = "UPDATE Workshop SET date = ?, duration_minutes = ?, max_participants = ?, price = ?, artist_id = ?, location = ?, description = ?, level = ? WHERE title = ?";
         try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setDate(1, workshop.getDate() != null ? Date.valueOf(workshop.getDate().toLocalDate()) : null);
             stmt.setInt(2, workshop.getDurationMinutes());
             stmt.setInt(3, workshop.getMaxParticipants());
@@ -138,7 +135,7 @@ public class JdbcWorkshopDao implements WorkshopDao {
     public void delete(String title) {
         String sql = "DELETE FROM Workshop WHERE title = ?";
         try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, title);
             stmt.executeUpdate();
         } catch (SQLException e) {
