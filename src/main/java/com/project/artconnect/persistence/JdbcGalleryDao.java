@@ -47,6 +47,54 @@ public class JdbcGalleryDao implements GalleryDao {
         return galleries;
     }
 
+    @Override
+    public void save(Gallery gallery) {
+        String sql = "INSERT INTO Gallery (name, address, owner_name, opening_hours, contact_phone, rating, website) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, gallery.getName());
+            stmt.setString(2, gallery.getAddress());
+            stmt.setString(3, gallery.getOwnerName());
+            stmt.setString(4, gallery.getOpeningHours());
+            stmt.setString(5, gallery.getContactPhone());
+            stmt.setString(6, gallery.getRating() + " stars");
+            stmt.setString(7, gallery.getWebsite());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void update(Gallery gallery) {
+        String sql = "UPDATE Gallery SET address = ?, owner_name = ?, opening_hours = ?, contact_phone = ?, rating = ?, website = ? WHERE name = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, gallery.getAddress());
+            stmt.setString(2, gallery.getOwnerName());
+            stmt.setString(3, gallery.getOpeningHours());
+            stmt.setString(4, gallery.getContactPhone());
+            stmt.setString(5, gallery.getRating() + " stars");
+            stmt.setString(6, gallery.getWebsite());
+            stmt.setString(7, gallery.getName());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void delete(String name) {
+        String sql = "DELETE FROM Gallery WHERE name = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private Gallery mapResultSetToGallery(ResultSet rs) throws SQLException {
         Gallery gallery = new Gallery();
         gallery.setName(rs.getString("name"));

@@ -8,4 +8,14 @@ public interface WorkshopDao {
     Optional<Workshop> findById(Long id);
 
     List<Workshop> findAll();
+
+    void save(Workshop workshop);
+
+    void update(Workshop workshop);
+
+    void delete(String name);
+
+    int getParticipantsCount(long workshopId);
+
+    void bookWorkshop(long workshopId, long memberId);
 }

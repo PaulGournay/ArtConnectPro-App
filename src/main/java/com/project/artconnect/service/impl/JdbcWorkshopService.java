@@ -32,13 +32,38 @@ public class JdbcWorkshopService implements WorkshopService {
 
     @Override
     public void bookWorkshop(Workshop workshop, CommunityMember member) {
-        // You will implement the JDBC Booking transaction here later!
-        System.out.println("JDBC Mode: Booking saved for " + member.getName() + " in workshop: " + workshop.getTitle());
+        if (workshop == null || member == null || workshop.getId() == null || member.getId() == null) {
+            throw new IllegalArgumentException("Workshop and member must be selected before booking.");
+        }
+        workshopDao.bookWorkshop(workshop.getId(), member.getId());
     }
 
     @Override
     public List<Booking> getBookingsByMember(CommunityMember member) {
         // Return an empty list for now until a BookingDao is implemented
         return Collections.emptyList();
+    }
+
+        @Override
+    public void createWorkshop(Workshop workshop) {
+        workshopDao.save(workshop);
+    }
+
+    @Override
+    public void updateWorkshop(Workshop workshop) {
+        workshopDao.update(workshop);
+    }
+
+    @Override
+    public void deleteWorkshop(String name) {
+        workshopDao.delete(name);
+    }
+
+    @Override
+    public int getWorkshopParticipantsCount(Long workshopId) {
+        if (workshopId == null) {
+            return 0;
+        }
+        return workshopDao.getParticipantsCount(workshopId);
     }
 }

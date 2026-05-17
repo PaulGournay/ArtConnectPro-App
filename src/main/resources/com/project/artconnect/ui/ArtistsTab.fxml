@@ -19,10 +19,11 @@
             <TableColumn fx:id="nameColumn" text="Name" prefWidth="200" />
             <TableColumn fx:id="cityColumn" text="City" prefWidth="150" />
             <TableColumn fx:id="emailColumn" text="Email" prefWidth="200" />
+            <TableColumn fx:id="phoneColumn" text="Phone" prefWidth="150" />
             <TableColumn fx:id="yearColumn" text="Birth Year" prefWidth="100" />
         </columns>
     </TableView>
-    <HBox spacing="10.0" alignment="CENTER_LEFT">
+    <HBox fx:id="actionsBox" spacing="10.0" alignment="CENTER_LEFT">
         <Button text="Add Artist" onAction="#handleAdd" />
         <Button text="Modify Artist" onAction="#handleModify" />
         <Button text="Delete Artist" onAction="#handleDelete" />

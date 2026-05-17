@@ -22,6 +22,8 @@ public class ServiceProvider {
     private static final WorkshopDao jdbcWorkshopDao = new JdbcWorkshopDao();
     private static final CommunityMemberDao jdbcMemberDao = new JdbcCommunityMemberDao();
 
+    private static final UserContext userContext = new UserContext();
+
     // ---------------------------------------------------------
     // 2. Initialize the Services (Business Layer)
     // ---------------------------------------------------------
@@ -70,5 +72,9 @@ public class ServiceProvider {
 
     public static ExhibitionService getExhibitionService() {
         return exhibitionService;
+    }
+
+    public static UserContext getUserContext() {
+        return userContext;
     }
 }
