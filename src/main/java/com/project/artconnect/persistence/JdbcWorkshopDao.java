@@ -52,6 +52,38 @@ public class JdbcWorkshopDao implements WorkshopDao {
     }
 
     @Override
+    public int getParticipantsCount(long workshopId) {
+        String sql = "SELECT get_workshop_participants_count(?)";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, workshopId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public void bookWorkshop(long workshopId, long memberId) {
+        String sql = "INSERT INTO Booking (booking_date, payment_status, workshop_id, user_id) " +
+                "VALUES (NOW(), 'Pending', ?, ?)";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, workshopId);
+            stmt.setLong(2, memberId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to book workshop", e);
+        }
+    }
+
+    @Override
     public void save(Workshop workshop) {
         String call = "{CALL create_workshop_with_artist(?, ?, ?, ?, ?, ?)}";
         try (Connection conn = ConnectionManager.getConnection();
@@ -129,6 +161,10 @@ public class JdbcWorkshopDao implements WorkshopDao {
 
     private Workshop mapResultSetToWorkshop(ResultSet rs) throws SQLException {
         Workshop workshop = new Workshop();
+        int id = rs.getInt("workshop_id");
+        if (!rs.wasNull()) {
+            workshop.setId(id);
+        }
         workshop.setTitle(rs.getString("title"));
 
         Date date = rs.getDate("date");

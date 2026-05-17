@@ -1,14 +1,26 @@
 package com.project.artconnect.ui;
 
 import com.project.artconnect.model.Artist;
+import com.project.artconnect.model.CommunityMember;
 import com.project.artconnect.model.Workshop;
+import com.project.artconnect.service.CommunityService;
 import com.project.artconnect.service.WorkshopService;
 import com.project.artconnect.util.ServiceProvider;
+import com.project.artconnect.util.UserContext;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import java.time.LocalDateTime;
@@ -29,10 +41,16 @@ public class WorkshopController {
     private TableColumn<Workshop, Double> priceColumn;
     @FXML
     private TableColumn<Workshop, String> levelColumn;
+    @FXML
+    private TableColumn<Workshop, Integer> participantsColumn;
+    @FXML
+    private ComboBox<CommunityMember> memberComboBox;
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     private final WorkshopService workshopService = ServiceProvider.getWorkshopService();
+    private final CommunityService communityService = ServiceProvider.getCommunityService();
+    private final UserContext userContext = ServiceProvider.getUserContext();
 
     @FXML
     public void initialize() {
@@ -45,7 +63,40 @@ public class WorkshopController {
                 cellData.getValue().getInstructor() != null ? cellData.getValue().getInstructor().getName()
                         : "Unknown"));
 
+        participantsColumn.setCellValueFactory(cellData -> {
+            Integer id = cellData.getValue() != null ? cellData.getValue().getId() : null;
+            Long workshopId = id != null ? id.longValue() : null;
+            return new ReadOnlyObjectWrapper<>(
+                    workshopService.getWorkshopParticipantsCount(workshopId));
+        });
+        participantsColumn.visibleProperty().bind(userContext.adminProperty());
+
+        memberComboBox.setItems(FXCollections.observableArrayList(communityService.getAllMembers()));
+
         refreshTable();
+    }
+
+    @FXML
+    private void handleRegister() {
+        Workshop selectedWorkshop = workshopTable.getSelectionModel().getSelectedItem();
+        CommunityMember selectedMember = memberComboBox.getSelectionModel().getSelectedItem();
+
+        if (selectedWorkshop == null) {
+            showError("No Workshop Selected", "Please select a workshop to register.");
+            return;
+        }
+
+        if (selectedMember == null) {
+            showError("No Member Selected", "Please select a member to register.");
+            return;
+        }
+
+        try {
+            workshopService.bookWorkshop(selectedWorkshop, selectedMember);
+            refreshTable();
+        } catch (Exception e) {
+            showError("Booking Failed", e.getMessage());
+        }
     }
 
     @FXML
@@ -178,20 +229,36 @@ public class WorkshopController {
                 workshop.setDescription(descriptionField.getText().trim().isEmpty() ? null : descriptionField.getText().trim());
                 try {
                     String dateStr = dateField.getText().trim();
-                    if (!dateStr.isEmpty()) workshop.setDate(LocalDateTime.parse(dateStr, DATE_FORMATTER));
-                } catch (DateTimeParseException e) { /* ignore */ }
+                    if (!dateStr.isEmpty()) {
+                        workshop.setDate(LocalDateTime.parse(dateStr, DATE_FORMATTER));
+                    }
+                } catch (DateTimeParseException e) {
+                    // Ignore invalid date
+                }
                 try {
                     String priceStr = priceField.getText().trim();
-                    if (!priceStr.isEmpty()) workshop.setPrice(Double.parseDouble(priceStr));
-                } catch (NumberFormatException e) { /* ignore */ }
+                    if (!priceStr.isEmpty()) {
+                        workshop.setPrice(Double.parseDouble(priceStr));
+                    }
+                } catch (NumberFormatException e) {
+                    // Ignore invalid price
+                }
                 try {
                     String durStr = durationField.getText().trim();
-                    if (!durStr.isEmpty()) workshop.setDurationMinutes(Integer.parseInt(durStr));
-                } catch (NumberFormatException e) { /* ignore */ }
+                    if (!durStr.isEmpty()) {
+                        workshop.setDurationMinutes(Integer.parseInt(durStr));
+                    }
+                } catch (NumberFormatException e) {
+                    // Ignore invalid duration
+                }
                 try {
                     String maxStr = maxParticipantsField.getText().trim();
-                    if (!maxStr.isEmpty()) workshop.setMaxParticipants(Integer.parseInt(maxStr));
-                } catch (NumberFormatException e) { /* ignore */ }
+                    if (!maxStr.isEmpty()) {
+                        workshop.setMaxParticipants(Integer.parseInt(maxStr));
+                    }
+                } catch (NumberFormatException e) {
+                    // Ignore invalid max participants
+                }
                 String instructorName = instructorField.getText().trim();
                 if (!instructorName.isEmpty()) {
                     Artist instructor = new Artist();

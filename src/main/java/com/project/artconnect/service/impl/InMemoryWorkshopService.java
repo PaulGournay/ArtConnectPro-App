@@ -75,4 +75,9 @@ public class InMemoryWorkshopService implements WorkshopService {
     public void deleteWorkshop(String title) {
         workshops.remove(title);
     }
+
+    @Override
+    public int getWorkshopParticipantsCount(Long workshopId) {
+        return 0;
+    }
 }

@@ -3,7 +3,6 @@ package com.project.artconnect.service.impl;
 import com.project.artconnect.dao.WorkshopDao;
 import com.project.artconnect.model.Booking;
 import com.project.artconnect.model.CommunityMember;
-import com.project.artconnect.model.Gallery;
 import com.project.artconnect.model.Workshop;
 import com.project.artconnect.service.WorkshopService;
 
@@ -33,8 +32,10 @@ public class JdbcWorkshopService implements WorkshopService {
 
     @Override
     public void bookWorkshop(Workshop workshop, CommunityMember member) {
-        // You will implement the JDBC Booking transaction here later!
-        System.out.println("JDBC Mode: Booking saved for " + member.getName() + " in workshop: " + workshop.getTitle());
+        if (workshop == null || member == null || workshop.getId() == null || member.getId() == null) {
+            throw new IllegalArgumentException("Workshop and member must be selected before booking.");
+        }
+        workshopDao.bookWorkshop(workshop.getId(), member.getId());
     }
 
     @Override
@@ -56,5 +57,13 @@ public class JdbcWorkshopService implements WorkshopService {
     @Override
     public void deleteWorkshop(String name) {
         workshopDao.delete(name);
+    }
+
+    @Override
+    public int getWorkshopParticipantsCount(Long workshopId) {
+        if (workshopId == null) {
+            return 0;
+        }
+        return workshopDao.getParticipantsCount(workshopId);
     }
 }
