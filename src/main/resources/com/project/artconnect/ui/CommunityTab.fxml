@@ -12,7 +12,9 @@
         <columns>
             <TableColumn fx:id="nameColumn" text="Name" prefWidth="250" />
             <TableColumn fx:id="emailColumn" text="Email" prefWidth="250" />
+            <TableColumn fx:id="phoneColumn" text="Phone" prefWidth="150" />
             <TableColumn fx:id="cityColumn" text="City" prefWidth="150" />
+            <TableColumn fx:id="birthYearColumn" text="Birth Year" prefWidth="120" />
         </columns>
     </TableView>
     <HBox spacing="10.0" alignment="CENTER_LEFT">

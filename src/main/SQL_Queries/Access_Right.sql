@@ -9,14 +9,14 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ArtGalleryDB.Artist TO 'artconnect_user'
 GRANT SELECT, INSERT, UPDATE, DELETE ON ArtGalleryDB.Artwork TO 'artconnect_user'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE ON ArtGalleryDB.CommunityMember TO 'artconnect_user'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE ON ArtGalleryDB.Exhibition TO 'artconnect_user'@'localhost';
-GRANT SELECT ON ArtGalleryDB.Gallery TO 'artconnect_user'@'localhost';
-GRANT SELECT ON ArtGalleryDB.Workshop TO 'artconnect_user'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON ArtGalleryDB.Gallery TO 'artconnect_user'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON ArtGalleryDB.Workshop TO 'artconnect_user'@'localhost';
 GRANT SELECT ON ArtGalleryDB.Discipline TO 'artconnect_user'@'localhost';
 GRANT SELECT ON ArtGalleryDB.Tag TO 'artconnect_user'@'localhost';
 
 -- 3. Specific deletion rights (Moderation)
 GRANT DELETE ON ArtGalleryDB.Review TO 'artconnect_user'@'localhost';
-GRANT DELETE ON ArtGalleryDB.Booking TO 'artconnect_user'@'localhost';
+GRANT SELECT, INSERT, DELETE ON ArtGalleryDB.Booking TO 'artconnect_user'@'localhost';
 
 -- 3b. Join tables access
 GRANT SELECT ON ArtGalleryDB.practices TO 'artconnect_user'@'localhost';

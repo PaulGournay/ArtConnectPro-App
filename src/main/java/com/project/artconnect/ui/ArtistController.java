@@ -4,11 +4,13 @@ import com.project.artconnect.model.Artist;
 import com.project.artconnect.model.Discipline;
 import com.project.artconnect.service.ArtistService;
 import com.project.artconnect.util.ServiceProvider;
+import com.project.artconnect.util.UserContext;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.geometry.Insets;
 import java.util.Optional;
 
@@ -26,16 +28,28 @@ public class ArtistController {
     @FXML
     private TableColumn<Artist, String> emailColumn;
     @FXML
+    private TableColumn<Artist, String> phoneColumn;
+    @FXML
     private TableColumn<Artist, Integer> yearColumn;
+    @FXML
+    private HBox actionsBox;
 
     private final ArtistService artistService = ServiceProvider.getArtistService();
+    private final UserContext userContext = ServiceProvider.getUserContext();
 
     @FXML
     public void initialize() {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("contactEmail"));
+        phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("birthYear"));
+
+        emailColumn.visibleProperty().bind(userContext.adminProperty());
+        phoneColumn.visibleProperty().bind(userContext.adminProperty());
+        yearColumn.visibleProperty().bind(userContext.adminProperty());
+        actionsBox.visibleProperty().bind(userContext.adminProperty());
+        actionsBox.managedProperty().bind(actionsBox.visibleProperty());
 
         disciplineFilter.setItems(FXCollections.observableArrayList(artistService.getAllDisciplines()));
         refreshTable();
